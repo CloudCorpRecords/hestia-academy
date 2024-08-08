@@ -1,0 +1,39 @@
+/* Navbar.module.css */
+
+.nav {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--surface-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+  
+  .nav ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .nav ul li {
+    margin: 20px 0;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  .nav ul li a:hover {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+  }

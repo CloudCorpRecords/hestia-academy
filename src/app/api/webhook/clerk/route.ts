@@ -1,4 +1,3 @@
-import { buffer } from "micro";
 import { Webhook, WebhookRequiredHeaders } from "svix";
 import { clerkClient } from "@clerk/nextjs/server";
 import Stripe from "stripe";
@@ -10,14 +9,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET1;
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(req: NextRequest) {
-  const buf = await buffer(req);
+  const body = await req.text();
   const svixHeaders: WebhookRequiredHeaders = {
     "svix-id": req.headers.get("svix-id") as string,
     "svix-timestamp": req.headers.get("svix-timestamp") as string,
@@ -28,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const wh = new Webhook(webhookSecret!);
-    event = wh.verify(buf.toString(), svixHeaders);
+    event = wh.verify(body, svixHeaders);
   } catch (err: any) {
     console.log(
       `⚠️  Clerk Webhook signature verification failed: ${err.message}`,

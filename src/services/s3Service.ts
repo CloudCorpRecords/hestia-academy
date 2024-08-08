@@ -15,5 +15,5 @@ export const listBlobs = async () => {
   
   export const searchBlobs = async (query: string) => {
     const blobs = await listBlobs();
-    return blobs.filter(blob => blob.name.includes(query));
+    return blobs.filter((blob: { name: string | string[]; }) => blob.name.includes(query));
   };

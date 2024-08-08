@@ -13,7 +13,7 @@ export const listBlobs = async () => {
     }
   };
   
-  export const searchBlobs = async (query) => {
+  export const searchBlobs = async (query:any) => {
     const blobs = await listBlobs();
     return blobs.filter(blob => blob.name.includes(query));
   };

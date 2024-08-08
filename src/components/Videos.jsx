@@ -40,7 +40,7 @@ const Videos = () => {
       />
       <button onClick={handleSearch} className={styles.searchButton}>Search</button>
       <ul className={styles.videoList}>
-        {videos.map((video :any) => (
+        {videos.map((video) => (
           <li key={video.name} className={styles.videoItem}>
             <video width="320" height="240" controls>
               <source src={video.url} type="video/mp4" />

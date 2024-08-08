@@ -1,7 +1,7 @@
-import { buffer } from "micro";
+import { headers } from "next/headers"
 import Stripe from "stripe";
 import { clerkClient } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
@@ -13,9 +13,9 @@ export const config = {
   },
 };
 
-export async function POST(req: NextRequest) {
-  const buf = await buffer(req);
-  const sig = req.headers.get("stripe-signature");
+export async function POST(req: Request) {
+  const body = await req.text()
+  const sig = headers().get("Stripe-Signature") as string
 
   if (!sig) {
     console.error("⚠️  Stripe Webhook signature header is missing.");
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   try {
     stripeEvent = stripe.webhooks.constructEvent(
-      buf,
+      body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!,
     );
@@ -44,25 +44,33 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const session = stripeEvent.data.object as Stripe.Checkout.Session;
+  const stripeCustomerId = session.customer as string;
+  const clerkId = session.metadata.clerkId; // Get Clerk user ID from metadata
+  console.log("Session data:", session);
+
+  if (!clerkId) {
+    console.error("⚠️  Clerk user ID is missing from session metadata.");
+    return NextResponse.json({ error: "User not found." }, { status: 404 });
+  }
+
   if (stripeEvent && stripeEvent.type === "checkout.session.completed") {
-    const session = stripeEvent.data.object as Stripe.Checkout.Session;
-    console.log("Session data:", session);
-
-    const clerkId = session.metadata.clerkId; // Get Clerk user ID from metadata
-
-    if (!clerkId) {
-      console.error("⚠️  Clerk user ID is missing from session metadata.");
-      return NextResponse.json({ error: "User not found." }, { status: 404 });
-    }
-
-    const stripeCustomerId = session.customer as string;
+    // Retrieve the subscription details from Stripe.
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    )
 
     try {
       // Update Clerk user with the new metadata
       await clerkClient.users.updateUser(clerkId, {
         publicMetadata: {
           premium: "yes",
-          stripeCustomerId: stripeCustomerId, // Save the Stripe customer ID
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: subscription.customer as string,
+          stripePriceId: subscription.items.data[0].price.id,
+          stripeCurrentPeriodEnd: new Date(
+            subscription.current_period_end * 1000
+          ),
         },
       });
 
@@ -76,6 +84,23 @@ export async function POST(req: NextRequest) {
         { status: 500 },
       );
     }
+  }
+
+  if (stripeEvent && stripeEvent.type === "invoice.payment_succeeded") {
+    // Retrieve the subscription details from Stripe.
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    )
+
+    // Update the price id and set the new period end.
+    await clerkClient.users.updateUser(clerkId, {
+      publicMetadata: {
+        stripePriceId: subscription.items.data[0].price.id,
+        stripeCurrentPeriodEnd: new Date(
+          subscription.current_period_end * 1000
+        ),
+      },
+    });
   }
 
   return NextResponse.json({ status: "success" }, { status: 200 });

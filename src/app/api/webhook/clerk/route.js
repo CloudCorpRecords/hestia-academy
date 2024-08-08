@@ -67,7 +67,8 @@ export async function POST(req) {
       );
     }
   } else {
-    return NextResponse.json({ error: "Unhandled event type" }, { status: 400 });
+    //we dont have a handler for this event yet, so return success
+    return NextResponse.json({ success: true }, { status: 200 });
   }
 }
 

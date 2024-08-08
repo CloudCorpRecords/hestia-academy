@@ -5,7 +5,8 @@ import {
 
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
-  '/forum(.*)',
+  '/video(.*)',
+  '/chatbot(.*)',
   '/profile(.*)'
 ]);
 

@@ -3,26 +3,26 @@ import { clerkClient } from "@clerk/nextjs/server";
 import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20",
 });
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET1;
 
-export async function POST(req: NextRequest) {
+export async function POST(req) {
   const body = await req.text();
-  const svixHeaders: WebhookRequiredHeaders = {
-    "svix-id": req.headers.get("svix-id") as string,
-    "svix-timestamp": req.headers.get("svix-timestamp") as string,
-    "svix-signature": req.headers.get("svix-signature") as string,
+  const svixHeaders = {
+    "svix-id": req.headers.get("svix-id"),
+    "svix-timestamp": req.headers.get("svix-timestamp"),
+    "svix-signature": req.headers.get("svix-signature"),
   };
 
-  let event: any; // Changed to 'any' for type safety
+  let event; // Changed to 'any' for type safety
 
   try {
-    const wh = new Webhook(webhookSecret!);
+    const wh = new Webhook(webhookSecret);
     event = wh.verify(body, svixHeaders);
-  } catch (err: any) {
+  } catch (err) {
     console.log(
       `⚠️  Clerk Webhook signature verification failed: ${err.message}`,
     );
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
         `User ${user.id} metadata updated with premium: no and stripeCustomerId: ${stripeCustomer.id}`,
       );
       return NextResponse.json({ success: true }, { status: 200 });
-    } catch (err: any) {
+    } catch (err) {
       console.error(
         `Failed to create Stripe customer or update user metadata: ${err.message}`,
       );

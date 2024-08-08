@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     try {
       // Create a Stripe customer
       const stripeCustomer = await stripe.customers.create({
-        email: user.primaryEmailAddress,
+        email: user.primaryEmailAddress.email_address,
         metadata: {
           clerkId: user.id,
         },

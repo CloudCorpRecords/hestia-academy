@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from '@clerk/nextjs'
 import {
   ArrowPathIcon,
   ChevronRightIcon,
@@ -204,6 +205,22 @@ export default function Home() {
             />
           </div>
           <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-40 lg:flex lg:px-8 lg:pt-40">
+            <div className='absolute top-7 right-10 flex justify-end min-w-full'>
+              <SignedIn>
+                <SignOutButton>
+                  <button type="button" className='bg-indigo-500 text-white w-36 h-10 flex items-center justify-center rounded'>
+                    Sign Out
+                  </button>
+                </SignOutButton>
+              </SignedIn>
+              <SignedOut>
+              <SignInButton mode="modal">
+                  <button type="button" className='bg-indigo-500 text-white w-36 h-10 flex items-center justify-center rounded'>
+                    Sign In
+                  </button>
+                </SignInButton>
+              </SignedOut>
+            </div>
             <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-8">
               <img
                 alt="Your Company"

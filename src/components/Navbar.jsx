@@ -28,25 +28,26 @@ export default function Navbar({user}){
         <Disclosure as="nav" className="border-b border-gray-200 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
-              <div className="flex">
+              <div className="flex items-center justify-between">
                 <div className="flex flex-shrink-0 items-center">
-                    <Link href="/">
+                    <Link href="/" className='flex gap-2 items-center'>
                         <Image
                             alt="Hestia"
-                            src="/next.svg"
-                            className="block h-3 w-auto lg:hidden"
+                            src="/hestia-icon.svg"
+                            className="block h-8 w-auto lg:hidden"
                             width={250}
                             height={100}
                         />
                         <Image
                             alt="Hestia"
-                            src="/next.svg"
-                            className="hidden h-5 w-auto lg:block"
+                            src="/hestia-icon.svg"
+                            className="hidden h-10 w-auto lg:block"
                             width={250}
                             height={100}
                         />
                     </Link>
                 </div>
+
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map((item) => (
                     <Link
@@ -65,6 +66,9 @@ export default function Navbar({user}){
                   ))}
                 </div>
               </div>
+
+              <div className="flex items-center justify-center lg:hidden font-semibold text-lg">01HESTIA ACADEMY</div>
+
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 <button
                   type="button"

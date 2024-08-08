@@ -39,7 +39,7 @@ export async function POST(req) {
     try {
       // Create a Stripe customer
       const stripeCustomer = await stripe.customers.create({
-        email: user.primaryEmailAddress.email_address,
+        email: user.email_addresses[0].email_address,
         metadata: {
           clerkId: user.id,
         },

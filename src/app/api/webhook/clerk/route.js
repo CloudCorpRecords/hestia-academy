@@ -1,13 +1,13 @@
-import { Webhook, WebhookRequiredHeaders } from "svix";
+import { Webhook } from "svix";
 import { clerkClient } from "@clerk/nextjs/server";
 import Stripe from "stripe";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20",
 });
 
-const webhookSecret = process.env.CLERK_WEBHOOK_SECRET1;
+const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
 
 export async function POST(req) {
   const body = await req.text();

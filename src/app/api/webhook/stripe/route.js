@@ -17,9 +17,16 @@ export async function POST(req) {
       { status: 400 },
     );
   }
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error("⚠️  Stripe Webhook auth is missing.");
+    return NextResponse.json(
+      { error: "Webhook Error: Stripe auth is missing." },
+      { status: 401 },
+    );
+  }
 
   let stripeEvent;
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   try {
     stripeEvent = stripe.webhooks.constructEvent(

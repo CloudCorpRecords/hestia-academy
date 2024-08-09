@@ -1,4 +1,3 @@
-import { headers } from "next/headers"
 import Stripe from "stripe";
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -9,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 export async function POST(req) {
   const body = await req.text();
-  const sig = headers().get("Stripe-Signature");
+  const sig = req.headers.get('stripe-signature');
 
   if (!sig) {
     console.error("⚠️  Stripe Webhook signature header is missing.");

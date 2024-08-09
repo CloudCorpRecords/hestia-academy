@@ -45,7 +45,7 @@ export async function GET(req) {
           ),
         },
       });
-      NextResponse.redirect(new URL('/dashboard', request.url))
+      NextResponse.redirect(new URL('/dashboard', req.url))
     } catch (err) {
       console.error("Error retrieving checkout session:", err);
       return NextResponse.json({ error: err.message }, { status: err.statusCode || 500 });

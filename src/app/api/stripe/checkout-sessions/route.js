@@ -25,7 +25,7 @@ export async function POST(req) {
       line_items: items,
       mode: "subscription",
       success_url: `${origin}/api/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/cancel`,
+      cancel_url: `${origin}/dashboard`,
     });
 
     return NextResponse.json({ id: session.id });

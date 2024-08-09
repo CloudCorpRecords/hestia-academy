@@ -22,7 +22,7 @@ export async function GET(req) {
       }
   
       const session = await stripe.checkout.sessions.retrieve(sessionId);
-      const clerkId = session.metadata.clerkId; // Get Clerk user ID from metadata
+      const clerkId = session.metadata.clerkId; 
       console.log("Session data:", session);
     
       if (!clerkId) {
@@ -45,7 +45,7 @@ export async function GET(req) {
           ),
         },
       });
-      NextResponse.redirect("/dashboard")
+      NextResponse.redirect(new URL('/dashboard', request.url))
     } catch (err) {
       console.error("Error retrieving checkout session:", err);
       return NextResponse.json({ error: err.message }, { status: err.statusCode || 500 });

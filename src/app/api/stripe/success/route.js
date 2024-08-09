@@ -16,13 +16,13 @@ export async function GET(req) {
     try {
       const { searchParams } = new URL(req.url);
       const sessionId = searchParams.get("session_id");
-  
+      const clerkId = searchParams.get("clerk_id");
+
       if (!sessionId) {
         return NextResponse.json({ error: "Session ID is required" }, { status: 400 });
       }
   
       const session = await stripe.checkout.sessions.retrieve(sessionId);
-      const clerkId = session.metadata.clerkId; 
       console.log("Session data:", session);
     
       if (!clerkId) {

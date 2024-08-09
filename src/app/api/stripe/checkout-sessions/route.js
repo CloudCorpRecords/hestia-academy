@@ -24,7 +24,7 @@ export async function POST(req) {
       billing_address_collection: 'auto',
       line_items: items,
       mode: "subscription",
-      success_url: `${origin}/api/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/api/stripe/success?session_id={CHECKOUT_SESSION_ID}&clerk_id=${user.id}`,
       cancel_url: `${origin}/dashboard`,
     });
 

@@ -19,12 +19,13 @@ export async function POST(req) {
   }
 
   let stripeEvent;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   try {
     stripeEvent = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET,
+      webhookSecret,
     );
     console.log("Stripe event:", stripeEvent);
   } catch (err) {

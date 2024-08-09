@@ -96,6 +96,24 @@ export async function POST(req) {
     });
   }
 
+  if (stripeEvent && stripeEvent.type === "subscription.canceled") {
+    // Retrieve the subscription details from Stripe.
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription
+    )
+
+    // Update the price id and set the new period end.
+    await clerkClient.users.updateUser(clerkId, {
+      publicMetadata: {
+        premium: 'no',
+        stripePriceId: subscription.items.data[0].price.id,
+        stripeCurrentPeriodEnd: new Date(
+          subscription.current_period_end * 1000
+        ),
+      },
+    });
+  }
+
   return NextResponse.json({ status: "success" }, { status: 200 });
 }
 

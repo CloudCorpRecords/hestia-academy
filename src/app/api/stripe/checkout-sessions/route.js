@@ -20,14 +20,15 @@ export async function POST(req) {
 
     const session = await stripe.checkout.sessions.create({
       customer: user.publicMetadata.stripeCustomerId,
-      ui_mode: "embedded",
+      //ui_mode: "embedded",
       billing_address_collection: 'auto',
       line_items: items,
       mode: "subscription",
-      return_url: `${origin}/dashboard`,
+      success_url: `${origin}/api/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/cancel`,
     });
 
-    return NextResponse.json({ clientSecret: session.client_secret });
+    return NextResponse.json({ id: session.id });
   } catch (err) {
     console.error("Error creating checkout session:", err);
     return NextResponse.json({ error: err.message }, { status: err.statusCode || 500 });

@@ -24,7 +24,7 @@ export async function POST(req) {
       billing_address_collection: 'auto',
       line_items: items,
       mode: "subscription",
-      return_url: `${origin}/return?session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${origin}/dashboard`,
     });
 
     return NextResponse.json({ clientSecret: session.client_secret });
